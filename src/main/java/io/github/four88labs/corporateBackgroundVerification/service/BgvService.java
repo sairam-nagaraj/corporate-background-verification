@@ -58,6 +58,9 @@ public class BgvService {
             logger.info("{} Response: {}", type, response);
             String status = objectMapper.readTree(response).get("status").asText();
             details.setStatus(status);
+            if(details.getStatus().equals("FLAGGED")) {
+                details.setError("Multiple entities found for the given name. Active entities found "+objectMapper.readTree(response).get("matchesFound").asText());
+            }
 
         } catch (TimeoutException e) {
             logger.warn("{} call timed out after {}ms", type, TIMEOUT_MS);
